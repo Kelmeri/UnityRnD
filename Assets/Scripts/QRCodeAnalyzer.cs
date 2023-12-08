@@ -12,39 +12,28 @@ public struct QRCodeAnalyzer
 {
     private static AutoResetEvent _autoResetEvent = new AutoResetEvent(false);
     private static Bitmap _bitmap;
-    public static int AnalyzeQRCode()
+    public static int AnalyzeQRCode(byte[] bitmap)
     {
-        var videoDevices = new AForge.Video.DirectShow.FilterInfoCollection(FilterCategory.VideoInputDevice);
-        if (videoDevices.Count == 0)
-        {
-            Debug.LogError("No camera found");
-            return -1;
-        }
-        var videoDevice = new VideoCaptureDevice(videoDevices[0].MonikerString ?? videoDevices[1].MonikerString);
-        videoDevice.NewFrame += VideoDevice_NewFrame;
-        videoDevice.Start();
-        _autoResetEvent.WaitOne();
-        videoDevice.SignalToStop();
-        videoDevice.WaitForStop();
-
-        //save to pictures folder
+        _bitmap = new Bitmap(new MemoryStream(bitmap));
+        string decodedQRCode = DecodeQRCode(_bitmap);
         string picturesFolderPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyPictures);
         _bitmap.Save(Path.Combine(picturesFolderPath, "QRCode.png"));
-
-        string decodedQRCode = DecodeQRCode(_bitmap);
         if (string.IsNullOrEmpty(decodedQRCode))
         {
             return -1;
         }
         else
         {
-            return int.Parse(decodedQRCode);
+            //tryparse
+            if (int.TryParse(decodedQRCode, out int i))
+            {
+                return i;
+            }
+            else
+            {
+                return -1;
+            }
         }
-    }
-    private static void VideoDevice_NewFrame(object sender, NewFrameEventArgs eventArgs)
-    {
-        _bitmap = (Bitmap)eventArgs.Frame.Clone();
-        _autoResetEvent.Set();
     }
     private static string DecodeQRCode(Bitmap bitmap)
     {
@@ -61,5 +50,6 @@ public struct QRCodeAnalyzer
             return null;
         }
     }
-
 }
+
+// }
