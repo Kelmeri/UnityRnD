@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Unity.Netcode; // Include the Netcode for GameObjects library
+using Unity.Netcode;
 
 public class QRCodeReaderController : NetworkBehaviour
 {
@@ -31,11 +31,11 @@ public class QRCodeReaderController : NetworkBehaviour
     private void OnQRCodeReader(InputAction.CallbackContext context)
     {
         int i = QRCodeAnalyzer.AnalyzeQRCode(_cameraCapture.ConvertToBitmap(_cameraCapture.CapturePicture()));
-        CmdOnQRCodeReaderServerRpc(i);
+        ServerRpcOnQrCodeRead(i);
     }
 
     [ServerRpc]
-    private void CmdOnQRCodeReaderServerRpc(int i)
+    private void ServerRpcOnQrCodeRead(int i)
     {
         switch (i)
         {

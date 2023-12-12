@@ -24,7 +24,6 @@ public struct QRCodeAnalyzer
         }
         else
         {
-            //tryparse
             if (int.TryParse(decodedQRCode, out int i))
             {
                 return i;
@@ -51,5 +50,3 @@ public struct QRCodeAnalyzer
         }
     }
 }
-
-// }
