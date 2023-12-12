@@ -31,11 +31,11 @@ public class QRCodeReaderController : NetworkBehaviour
     private void OnQRCodeReader(InputAction.CallbackContext context)
     {
         int i = QRCodeAnalyzer.AnalyzeQRCode(_cameraCapture.ConvertToBitmap(_cameraCapture.CapturePicture()));
-        ServerRpcOnQrCodeRead(i);
+        OnQrCodeReadServerRpc(i);
     }
 
     [ServerRpc]
-    private void ServerRpcOnQrCodeRead(int i)
+    private void OnQrCodeReadServerRpc(int i)
     {
         switch (i)
         {
