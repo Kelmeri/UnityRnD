@@ -14,42 +14,45 @@ public class QRCodeReaderController : NetworkBehaviour
 
     public void Start()
     {
-        if (IsLocalPlayer)
-        {
+        Debug.Log("lolxd");
+        
             _qrCodeReaderAction.action.performed += OnQRCodeReader;
-        }
+        
     }
     public override void OnDestroy()
     {
         base.OnDestroy();
-        if (IsLocalPlayer)
-        {
+        
             _qrCodeReaderAction.action.performed -= OnQRCodeReader;
-        }
     }
     
     private void OnQRCodeReader(InputAction.CallbackContext context)
     {
+        Debug.Log("lolxdx2");
         int i = QRCodeAnalyzer.AnalyzeQRCode(_cameraCapture.ConvertToBitmap(_cameraCapture.CapturePicture()));
-        OnQrCodeReadServerRpc(i);
+        OnQrCodeRead(i);
     }
 
-    [ServerRpc]
-    private void OnQrCodeReadServerRpc(int i)
+    
+    private void OnQrCodeRead(int i)
     {
         switch (i)
         {
             case 1:
-                DisableAllOthersAndEnableIndexClientRpc(0);
+                DisableAllOthersAndEnableIndexClientRp
+                (0);
                 break;
             case 2:
-                DisableAllOthersAndEnableIndexClientRpc(1);
+                DisableAllOthersAndEnableIndexClientRp
+                (1);
                 break;
             case 3:
-                DisableAllOthersAndEnableIndexClientRpc(2);
+                DisableAllOthersAndEnableIndexClientRp
+                (2);
                 break;
             case 4:
-                DisableAllOthersAndEnableIndexClientRpc(3);
+                DisableAllOthersAndEnableIndexClientRp
+                (3);
                 break;
             default:
                 Debug.Log("No matches");
@@ -58,8 +61,8 @@ public class QRCodeReaderController : NetworkBehaviour
         Debug.Log("QRCodeReader");
     }
 
-    [ClientRpc]
-    private void DisableAllOthersAndEnableIndexClientRpc(int index)
+    
+    private void DisableAllOthersAndEnableIndexClientRp(int index)
     {
         if (_cards[index].gameObject == null)
         {
